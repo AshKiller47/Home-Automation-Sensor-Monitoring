@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
-const char* ssid = ""; const char* password = ""; const int a = 0, b = 4, c = 5;
+const char* ssid = "/*<WiFi SSID>*/"; const char* password = "/*<WiFi Password>*/"; const int a = 0, b = 4, c = 5;
 
 void setup() {
   
@@ -17,11 +17,11 @@ void loop() {
 
   if(WiFi.status() == WL_CONNECTED) {
 
-    HTTPClient httpClient; String data = "" + String(analogRead(A0), DEC); httpClient.begin(data); Serial.println(data);
+    HTTPClient httpClient; String data = "/*<URL of sensor_data_write.php>?data=*/" + String(analogRead(A0), DEC); httpClient.begin(data); Serial.println(data);
 
     int httpCode = httpClient.GET(); String response = ""; if(httpCode > 0) response = httpClient.getString(); else Serial.println(httpCode); httpClient.end();
 
-    httpClient.begin(""); httpCode = httpClient.GET(); response = "";
+    httpClient.begin("/*<URL of remote_data_read.php>*/"); httpCode = httpClient.GET(); response = "";
 
     if(httpCode > 0) {
 
