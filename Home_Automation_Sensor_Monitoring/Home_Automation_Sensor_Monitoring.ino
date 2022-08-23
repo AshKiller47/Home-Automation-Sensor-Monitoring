@@ -1,0 +1,40 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+
+const char* ssid = ""; const char* password = ""; const int a = 0, b = 4, c = 5;
+
+void setup() {
+  
+  // put your setup code here, to run once:
+  
+  pinMode(a, OUTPUT); pinMode(b, OUTPUT); pinMode(c, OUTPUT); WiFi.begin(ssid, password); Serial.begin(115200); while(WiFi.status() != WL_CONNECTED) {  Serial.println("Connecting..."); delay(1000); }
+  
+}
+
+void loop() {
+  
+  // put your main code here, to run repeatedly:
+
+  if(WiFi.status() == WL_CONNECTED) {
+
+    HTTPClient httpClient; String data = "" + String(analogRead(A0), DEC); httpClient.begin(data); Serial.println(data);
+
+    int httpCode = httpClient.GET(); String response = ""; if(httpCode > 0) response = httpClient.getString(); else Serial.println(httpCode); httpClient.end();
+
+    httpClient.begin(""); httpCode = httpClient.GET(); response = "";
+
+    if(httpCode > 0) {
+
+      response = httpClient.getString(); Serial.println(response);
+
+      if(response[0] == 1) digitalWrite(a, HIGH); else digitalWrite(a, LOW);
+      if(response[1] == 1) digitalWrite(b, HIGH); else digitalWrite(b, LOW);
+      if(response[2] == 1) digitalWrite(c, HIGH); else digitalWrite(c, LOW);
+      
+    }
+
+    else Serial.println(httpCode); httpClient.end(); delay(1000);
+    
+  }
+  
+}
